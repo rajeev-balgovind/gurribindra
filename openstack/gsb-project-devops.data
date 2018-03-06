@@ -1,0 +1,4 @@
+export OS_AUTH_URL=https://cloud.sapiennetworks.com:5000/v2.0
+export OS_PROJECT_NAME=DevOps
+export OS_USERNAME=devopsuser!@#$
+export OS_PASSWORD=D3v0ps_gurr1

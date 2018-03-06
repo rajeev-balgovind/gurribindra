@@ -1,0 +1,50 @@
+---
+- name: Test Playbook
+  hosts: 127.0.0.1
+  connection: local
+  vars_files:
+    - "vars/main.yml"
+  tasks:
+    #Create a UBUNTU VM
+    - os_server:
+        state: absent
+        name: DNS_Server
+        image: a21363f4-2cb5-4d02-85e5-8c392bd61eef
+        timeout: 200
+        flavor: m1.large
+        key_name: gsb-rbg-openstack-standard
+        security_groups: default,DNS_Security_Group
+        auto_floating_ip: yes
+        nics:
+           - net-name: Infra_Network_A
+      register: dns_server_1
+
+    - os_security_group:
+        state: absent
+        name: DNS_Security_Group
+        description: Security group for DNS Servers
+
+    - os_router:
+        state: absent
+        name: Standalone_Dns_Environment_Router
+        network: public_network
+        interfaces:
+           - Infra_Subnet_A-1
+    - os_subnet:
+        state: absent
+        network_name: Infra_Network_A
+        name: Infra_Subnet_A-1
+        cidr: 10.200.100.0/24
+        dns_nameservers:
+           - 8.8.8.8
+           - 8.8.4.4
+    - os_network:
+        state: absent
+        name: Infra_Network_A
+        external: False
+
+
+
+
+
+

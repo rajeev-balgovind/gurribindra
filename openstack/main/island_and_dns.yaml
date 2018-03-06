@@ -1,0 +1,3 @@
+
+- include: ../primary-infra/primary_infra.yaml
+- include: ../standalone-dns-server/setup_dns.yaml

@@ -1,0 +1,6 @@
+---
+auth_url: "https://cloud.sapiennetworks.com:5000/v2.0"
+login_username: devopsuser!@#$
+login_password: D3v0ps_gurr1
+key_name: gsb-rbg-openstack-standard
+

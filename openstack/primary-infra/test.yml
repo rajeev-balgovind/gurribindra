@@ -1,0 +1,13 @@
+---
+- name: Test Ansible Scripts
+  hosts: 127.0.0.1
+  become: no
+  tasks:
+    - name: run ls
+      command: ls -l
+      register: cmd_output
+
+    - debug:
+        var: cmd_output.stdout
+
+

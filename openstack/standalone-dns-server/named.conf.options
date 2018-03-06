@@ -1,0 +1,17 @@
+acl user-group {
+		0.0.0.0/0;
+};
+options {
+        directory "/var/cache/bind";
+	recursion yes;
+	dnssec-enable yes;
+        dnssec-validation yes;
+	allow-query { user-group; };
+        auth-nxdomain no;    # conform to RFC1035
+        listen-on-v6 { any; };
+	forwarders {
+		8.8.8.8;
+		8.8.4.4;
+	};
+	forward only;
+};
