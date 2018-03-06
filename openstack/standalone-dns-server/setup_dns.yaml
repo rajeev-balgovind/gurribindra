@@ -9,3 +9,25 @@
          update_cache: yes
          state: latest
 
+    - name: Check if original file exists
+      stat: path=/etc/bind/named.conf.options
+      register: foo_stat
+
+    - name: Backup original file
+      command: mv /etc/bind/named.conf.options /etc/bind/named.conf.options.bak
+
+    - name: Download configuration for basic forwarder
+      get_url: 
+         url: http://gsb-vm.techadamie.us/named.conf.options
+         dest: /etc/bind/named.conf.options
+
+    - name: Restart Bind9
+      service: 
+         name: bind9
+         state: restarted
+
+
+    - debug:
+         msg: DNS services should be working on {{ ansible_ssh_host }}. Please verify by running <nslookup cloud.sapiennetworks.com {{ ansible_ssh_host }}>
+
+

@@ -6,6 +6,7 @@
     - "vars/main.yml"
   tasks:
     #Create a UBUNTU VM
+
     - os_server:
         state: absent
         name: DNS_Server

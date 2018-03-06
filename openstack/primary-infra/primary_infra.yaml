@@ -66,6 +66,7 @@
         name: dnsserver1
         groups: dns_servers
         ansible_ssh_host: "{{ dns_server_1.server.public_v4 }}"
+
     - name: remove ip from known_hosts
       command: ssh-keygen -f /home/ubuntu/.ssh/known_hosts -R "{{ dns_server_1.server.public_v4 }}"
 
@@ -74,8 +75,13 @@
       pause:
         seconds: 30
 
+    - name: Add new key to known_hosts
+      connection: local
+      shell: "ssh-keyscan -H {{dns_server_1.server.public_v4}} >> ~/.ssh/known_hosts"
+
+
     - name: Install python on server
-      raw: ssh -vvv -i ~/gsb-openstack1.pem ubuntu@{{ dns_server_1.server.public_v4 }} "sudo apt-get -y install python-minimal"
+      raw: ssh -i ~/gurribindra/gsb-openstack1.pem ubuntu@{{ dns_server_1.server.public_v4 }} "sudo apt-get -y install python-minimal"
       register: ssh_out
 
     - name: Show output of the python setup
