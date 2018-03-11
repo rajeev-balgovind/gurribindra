@@ -1,0 +1,7 @@
+---
+image_id_for_server: 32014896-6bc9-4ffe-b1ae-802ba659792e
+server_key_name: gsb-rbg-openstack-standard
+az_of_server: private
+nic_net_name: infra_network
+subnet_cidr: 192.168.200.0/24
+name_of_server: localdnsserver001

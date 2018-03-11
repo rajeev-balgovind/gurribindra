@@ -1,0 +1,66 @@
+#Create new Security Group for DNS
+   - os_security_group:
+       state: present
+       name: DNS_Security_Group
+       description: Security group for DNS Servers
+
+   - os_security_group_rule:
+       security_group: DNS_Security_Group
+       protocol: tcp
+       port_range_min: 53
+       port_range_max: 53
+       remote_ip_prefix: 0.0.0.0/0
+
+   - os_security_group_rule:
+       security_group: DNS_Security_Group
+       protocol: udp
+       port_range_min: 53
+       port_range_max: 53
+       remote_ip_prefix: 0.0.0.0/0
+
+
+#Create a UBUNTU VM
+   - os_server:
+       state: present
+       name: "{{name_of_server}}"
+       image: "{{image_id_for_server}}"
+       timeout: 200
+       flavor: m1.large
+       key_name: "{{server_key_name}}"
+       security_groups: default,DNS_Security_Group
+       auto_floating_ip: yes
+       availability_zone: "{{az_of_server}}"
+       nics:
+          - net-name: "{{nic_net_name}}"
+     register: dns_server_1
+
+   - name: Add vm to inventory
+     add_host:
+       name: dnsserver1
+       groups: dns_servers
+       ansible_host: "{{ dns_server_1.server.public_v4 }}"
+
+   - name: change target host
+     set_fact:
+       ansible_host: "{{ dns_server_1.server.public_v4 }}"
+
+   - name: remove ip from known_hosts
+     command: ssh-keygen -f /home/ubuntu/.ssh/known_hosts -R "{{ dns_server_1.server.public_v4 }}"
+
+
+   - name: Wait to be sure ssh is available
+     pause:
+       seconds: 30
+
+   - name: Add new key to known_hosts
+     shell: "ssh-keyscan -H {{dns_server_1.server.public_v4}} >> ~/.ssh/known_hosts"
+
+
+   - name: Install python on server
+     raw: ssh -i ~/gurribindra/gsb-openstack1.pem ubuntu@{{ dns_server_1.server.public_v4 }} "sudo apt-get -y install python-minimal"
+     register: ssh_out
+
+   - name: Show output of the python setup
+     debug:
+       var: ssh_out
+

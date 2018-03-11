@@ -1,9 +1,5 @@
-- hosts : dns_servers
-  gather_facts: no
-  user: ubuntu
-  become: true
-  tasks: 
     - name: Setup BIND9
+      become: true
       apt: 
          name: bind9
          update_cache: yes
@@ -14,20 +10,23 @@
       register: foo_stat
 
     - name: Backup original file
+      become: true
       command: mv /etc/bind/named.conf.options /etc/bind/named.conf.options.bak
 
     - name: Download configuration for basic forwarder
+      become: true
       get_url: 
          url: http://gsb-vm.techadamie.us/named.conf.options
          dest: /etc/bind/named.conf.options
 
     - name: Restart Bind9
+      become: true
       service: 
          name: bind9
          state: restarted
 
 
     - debug:
-         msg: DNS services should be working on {{ ansible_ssh_host }}. Please verify by running <nslookup cloud.sapiennetworks.com {{ ansible_ssh_host }}>
+         msg: DNS services should be working on {{ ansible_host }}. Please verify by running <nslookup cloud.sapiennetworks.com {{ ansible_host }}>
 
 

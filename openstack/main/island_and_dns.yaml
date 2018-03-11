@@ -1,3 +1,7 @@
-
-- include: ../primary-infra/primary_infra.yaml
-- include: ../standalone-dns-server/setup_dns.yaml
+---
+- name: Setup a dns Server in new infrastructure
+  hosts: localhost
+  tasks:
+    - include: ../primary-infra/primary_infra.yaml
+    - include: ../standalone-dns-server/setup_server.yaml
+    - include: ../standalone-dns-server/setup_dns.yaml
